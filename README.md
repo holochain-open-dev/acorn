@@ -17,6 +17,12 @@ Note that this branch has since been merged into the main branch, and so this re
 
 ## Explanations
 
+For Holochain applications dealing in sensitive data, or shared data, or almost any application, there will be a need for performing peer to peer “validation” of data that is incoming over the network, that peers are being requested to “hold”. Writing these validation rules in our Holochain “Zomes” is among the most important parts of the code that we write in our applications. This repo is meant as a guide to writing validation rules, and using the relatively new “MockHDK” to ensure that your application validation rules function as expected via “unit testing”.
+
+### What is unit testing?
+
+Unit testing is where we call each function of our code that we define in a “test” of that code, passing it a set of arguments, and defining our expected result. This is because our functions should be written in a way that makes them “deterministic”. They will be “deterministic” if they are “pure functions” meaning they have no unexpected “side effects” outside of the function, a.k.a. by altering global variables and such. We also may have to define multiple tests for a given function, if if has “logical branches” in it (any “if” statement, or something equivalent to an if in logical terms), to test each that each logical branch also happens correctly given a set of inputs that should result in that logical pathway being taken. If we test all these logical branches, in all of our defined functions, then we’ve done what is called “unit testing”, and we have complete “code coverage” or “test coverage”. If we only test some of the functions, or some of the logical branches in those functions, then we have what is considered “partial code coverage”.
+
 Because of new holochain developments, we are now able to start testing Zome functions and validation hooks without leaving Rust language, by using `cargo` to test, and a "Mock HDK" to mock (simulate) the holochain engine.
 
 In order to utilize these mocking features, we need to wrap those features in a Rust feature of our own (to keep the code out of our shipped binaries and compile size small). We add the following to the `Cargo.toml` of our Zome:
