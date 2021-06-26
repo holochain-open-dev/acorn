@@ -72,6 +72,79 @@ mock_hdk.expect_get().with(mockall::predicate::eq(GetInput::new(
 - when you see `set_hdk(mock_hdk);` it is making an update to (*double check this*) a lazy static global variable which holds the current version of the HDK that function calls will refer to. 
 - when you see `assert_eq!(super::validate_create_entry_goal_comment(validate_data.clone()), Ok(ValidateCallbackResult::Valid));` it is an example of making an assertion in your unit test that the validation hook being called by Holochain with a given expected input returns a given expected result.
 
+### Fixtures
+
+In order to quickly and efficiently test the code of Holochain core, being able to mock real world data quickly and efficiently was important, so the Holochain core team wrote the "fixt" crate. It provides what they call "fixturators" for many of the core structs, and almost all the primitive types, and sets up the foundations for a powerful composable system for easily adding fixturators to any new and customized structs and enums that you may define in your application code. This topic goes deep, and get quite highly complex quite quickly, however, we will try to cover it here at a surface level, and one sufficient to write your own simple ones. 
+
+The most important point to understand at the beginning is that what we want from a fixturator **is a function that we can call over and over again to generate new sample data**. Within Rust, this is handled as an "iterable". An "iterable" is a data structure that we can call `.next()` on again and again and retrieve a next result. The "fixt" crate makes heavy use of macros. These can be difficult to read the documentation of and get what the code is doing, so explanations are extra important. When using the macro `fixt!(...)` it is wrapping a call to `.next()` on an iterable fixturator (generator) and returning the result of that call. There are different types of sample data you may wish to generate and for that reason there are different variants of fixturators you can use. These are known as the "curves".
+
+#### The Curves: Empty, Predictable, and Unpredictable
+Better explanations than can be re-written are provided here, for the three curves:
+https://github.com/holochain/holochain/blob/bdb9c55d504135df39ccb1c75896557a788d0ac0/crates/fixt/src/lib.rs#L567-L616
+
+In short though:
+- calling an `Empty` curved fixturator will return the same result every time and should generally represent the notion of zero value, missing or void data
+- calling a `Predictable` curved fixturator should return a result that can be predicted if you know the number of times the fixturator has been previously called, due to the fact that it progresses when iteratively called in a strictly well defined logical fashion, not randomly. A series of numbers generated where each number is one higher than the last, for example. Or looping through the variants of an enum.
+- calling an `Unpredictable` curved fixturator should return a result that is well, unpredictable, or "random". It if were a struct with string fields and number fields, those contents would both be random as well. If it were an enum, it would be a random variant of it, plus random sub-contents if it has them
+
+#### Generating Data
+
+In the code sample below, we see
+```rust
+  use crate::fixtures::fixtures::{
+    GoalCommentFixturator, GoalFixturator, WrappedAgentPubKeyFixturator,
+    WrappedHeaderHashFixturator,
+  };
+```
+
+So there is a fixturator for each of our entry types... for `Goal` in [zome/src/goal/crud.rs](zome/src/goal/crud.rs)
+```rust
+#[hdk_entry(id = "goal")]
+#[derive(Clone, PartialEq)]
+pub struct Goal {
+  pub content: String,
+  pub user_hash: WrappedAgentPubKey,
+  pub user_edit_hash: Option<WrappedAgentPubKey>,
+  pub timestamp_created: f64,
+  pub timestamp_updated: Option<f64>,
+  pub hierarchy: Hierarchy,
+  pub status: Status,
+  pub tags: Option<Vec<String>>,
+  pub description: String,
+  pub time_frame: Option<TimeFrame>,
+  pub is_imported: bool,
+}
+```
+in [zome/src/fixtures.rs](zome/src/fixtures.rs) there is `GoalFixturator`, which is generated with this macro:
+```rust
+    fixturator!(
+      Goal;
+        constructor fn new(String, WrappedAgentPubKey, OptionWrappedAgentPubKey, f64, Optionf64, Hierarchy, Status, OptionVecString, String, OptionTimeFrame, bool);
+    );
+```
+
+Using a constructor function is just one of the methods for handling fixturating. If you use this `constructor fn new(...)` approach, then of course the struct will need a constructor function whose function signature matches. Note how the types listed out in the `Goal` fixturator! call matches point by point the types of the fields of `Goal`, with the caveat that we needed to wrap the generic types like `Option<TimeFrame>` with `OptionTimeFrame` which is defined simply as `type OptionTimeFrame = Option<TimeFrame>;` in above code. This is necessary just due to slight shortcomings of the macro.
+
+It makes logical sense that we can only define a fixturator for a complex struct if all of its sub structures and fields also have fixturators. 
+
+When we call `fixt!(Goal)` it replaces the code with this: `GoalFixturator::new(Unpredictable).next().unwrap()`.
+That means that the default curve is "unpredictable", and we generate a new fixturator and call it once when we call `fixt!` to get the first result. It is also possible to generate the first result on the predictable curve with `fixt!` by calling it like: `fixt!($name, Predictable)`. This will return the first result in the Predictable sequence. If you wanted to consecutively call the predictable fixturator, you would want to do it like this:
+```rust
+let mut predictable_fixturator = GoalFixturator::new(Predictable);
+let first_goal = predictable_fixturator.next().unwrap();
+let second_goal = predictable_fixturator.next().unwrap();
+```
+
+Note your fixturators should be behind a test cfg flag, to not include them during primary compilation:
+```
+#[cfg(test)]
+pub(crate) mod fixtures {
+  ...
+}
+```
+
+### Code Sample With Comments
+
 Here is a single test from `zome/src/goal_comment/validate.rs`, with some additional code commenting:
 
 ```rust
