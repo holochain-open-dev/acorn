@@ -1,6 +1,6 @@
 [workspace]
 members = [
-  "conductor",
+  "zome",
 ]
 
 # resolver = "2"
