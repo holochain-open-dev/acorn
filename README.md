@@ -128,7 +128,7 @@ Using a constructor function is just one of the methods for handling fixturating
 It makes logical sense that we can only define a fixturator for a complex struct if all of its sub structures and fields also have fixturators. 
 
 When we call `fixt!(Goal)` it replaces the code with this: `GoalFixturator::new(Unpredictable).next().unwrap()`.
-That means that the default curve is "unpredictable", and we generate a new fixturator and call it once when we call `fixt!` to get the first result. It is also possible to generate the first result on the predictable curve with `fixt!` by calling it like: `fixt!($name, Predictable)`. This will return the first result in the Predictable sequence. If you wanted to consecutively call the predictable fixturator, you would want to do it like this:
+That means that the default curve is "unpredictable", and we generate a new fixturator and call it once when we call `fixt!` to get the first result. It is also possible to generate the first result on the predictable curve with `fixt!` by calling it like: `fixt!(Goal, Predictable)`. This will return the first result in the Predictable sequence. If you wanted to consecutively call the predictable fixturator, you would want to do it like this:
 ```rust
 let mut predictable_fixturator = GoalFixturator::new(Predictable);
 let first_goal = predictable_fixturator.next().unwrap();
