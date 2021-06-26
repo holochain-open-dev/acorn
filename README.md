@@ -63,7 +63,7 @@ mock_hdk.expect_get().with(mockall::predicate::eq(GetInput::new(
       ))).times(1).return_const(Ok(None));
 `
   it is an example of mocking the `get` method of the HDK (pulled from `expect_get()`, for some other function like `hash_entry` it would be `expect_hash_entry`). It uses chaining `.this().that()` to define the intended response. See [mockall](https://crates.io/crates/mockall) crate for usage.
-- when you see `set_hdk(mock_hdk);` it is making an update to *check this* a lazy static global variable which holds the current version of the HDK that function calls will refer to. 
+- when you see `set_hdk(mock_hdk);` it is making an update to (*double check this*) a lazy static global variable which holds the current version of the HDK that function calls will refer to. 
 - when you see `assert_eq!(super::validate_create_entry_goal_comment(validate_data.clone()), Ok(ValidateCallbackResult::Valid));` it is an example of making an assertion in your unit test that the validation hook being called by Holochain with a given expected input returns a given expected result.
 
 Here is a single test from `zome/src/goal_comment/validate.rs`, with some additional code commenting:
