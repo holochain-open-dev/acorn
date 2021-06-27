@@ -11,6 +11,7 @@ To test:
 ## Holochain Version In Use
 
 revision: [bdb9c55d504135df39ccb1c75896557a788d0ac0 June 25, 2021](https://github.com/holochain/holochain/commit/bdb9c55d504135df39ccb1c75896557a788d0ac0)
+
 date: June 25, 2021
 
 Note that coming up soon will be the [must_get](https://github.com/holochain/holochain/pull/812) style calls for validation and this will require changes here.
