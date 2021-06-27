@@ -10,7 +10,7 @@ To test:
 
 ## Holochain Version In Use
 
-revision: [bdb9c55d504135df39ccb1c75896557a788d0ac0 June 25, 2021](https://github.com/holochain/holochain/commit/bdb9c55d504135df39ccb1c75896557a788d0ac0)
+revision: [bdb9c55d504135df39ccb1c75896557a788d0ac0](https://github.com/holochain/holochain/commit/bdb9c55d504135df39ccb1c75896557a788d0ac0)
 
 date: June 25, 2021
 
