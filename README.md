@@ -10,10 +10,10 @@ To test:
 
 ## Holochain Version In Use
 
-branch: [2021-05-12-deepkey-tweaks](https://github.com/holochain/holochain/tree/2021-05-12-deepkey-tweaks)
-date: May 12, 2021
+revision: [bdb9c55d504135df39ccb1c75896557a788d0ac0 June 25, 2021](https://github.com/holochain/holochain/commit/bdb9c55d504135df39ccb1c75896557a788d0ac0)
+date: June 25, 2021
 
-Note that this branch has since been merged into the main branch, and so this repository could be updated to that latest at any point.
+Note that coming up soon will be the [must_get](https://github.com/holochain/holochain/pull/812) style calls for validation and this will require changes here.
 
 ## Explanations
 

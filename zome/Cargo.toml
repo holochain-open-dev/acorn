@@ -10,7 +10,7 @@ crate-type = [ "cdylib", "rlib" ]
 [dependencies]
 #hdk = "0.0.100"
 dna_help = { path = "../dna_help" }
-hdk = { git = "https://github.com/holochain/holochain", branch = "2021-05-12-deepkey-tweaks" }
+hdk = { git = "https://github.com/holochain/holochain", rev = "bdb9c55d504135df39ccb1c75896557a788d0ac0" }
 paste = "*"
 # use whatever serde hdk uses
 serde = "*"
@@ -18,8 +18,8 @@ thiserror = "1"
 mockall = "0.9"
 
 [dev-dependencies]
-fixt = { git = "https://github.com/holochain/holochain", branch = "2021-05-12-deepkey-tweaks" }
-holochain_types = { git = "https://github.com/holochain/holochain", branch = "2021-05-12-deepkey-tweaks" }
+fixt = { git = "https://github.com/holochain/holochain", rev = "bdb9c55d504135df39ccb1c75896557a788d0ac0" }
+holochain_types = { git = "https://github.com/holochain/holochain", rev = "bdb9c55d504135df39ccb1c75896557a788d0ac0" }
 rand = "0.7"
 strum = "0.18.0"
 strum_macros = "0.18.0"
