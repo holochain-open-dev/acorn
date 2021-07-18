@@ -61,7 +61,7 @@ There is a unit test in the respective files for each of these functions.
 
 You will see a few patterns in the code sample that will follow, here is a 1-liner on each of them:
 - where you see `fixt!(ValidateData)` it is the concept of generating semi-random data quickly and easily based on a "testing fixture", which Holochain has a helper library crate for called [fixt](https://github.com/holochain/holochain/tree/2021-05-12-deepkey-tweaks/crates/fixt), which is the origin of this `fixt!` macro. 
-- where you see `*validate_data.element.as_entry_mut() = ...`  it is using a rather memory unsafe function only available in testing mode in order to override the contents of some data located in memory, by accessing it mutably and "deferenced"/`*`.
+- where you see `*validate_data.element.as_entry_mut() = ...`  it is using a function only available in testing mode in order to override the contents of some data located in memory, by accessing it mutably and "deferenced"/`*`.
 - where you see `let mut mock_hdk = MockHdkT::new();` it is an example of generating a mockable holochain engine which matches entirely the function signatures of whichever version of the HDK you happen to be using at the time, whose calls can be mocked/simulated via patterns defined by the [mockall](https://crates.io/crates/mockall) library.
 - where you see: `
 mock_hdk.expect_get().with(mockall::predicate::eq(GetInput::new(
